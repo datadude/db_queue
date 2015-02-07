@@ -149,20 +149,20 @@ to the line number stored in the <em>__place.txt_</em> cache file.  use this to 
 
 <ul>
 <li>
-<em>log_file</em>: location and name for the logfile, defaults to <code>"#{Root_dir}/log/db_queue.log"</code>.</li>
+<strong>log_file</strong>: location and name for the logfile, defaults to <code>"#{Root_dir}/log/db_queue.log"</code>.</li>
 <li>
-<em>error_log_file</em>: location and name for the logfile, defaults to <code>"#{Root_dir}/log/db_queue_error.log'"</code>
+<strong>error_log_file</strong>: location and name for the logfile, defaults to <code>"#{Root_dir}/log/db_queue_error.log'"</code>
 </li>
 <li>
-<em>id_column</em>: sets the "primary key" for your data set defaluts to 'id' mostly used for logging.</li>
+<strong>id_column</strong>: sets the "primary key" for your data set defaluts to 'id' mostly used for logging.</li>
 <li>
-<em>do_reset</em>: resets the pointer for the SQLCache file to the begining defaults to false,  mostly not needed.</li>
+<strong>do_reset</strong>: resets the pointer for the SQLCache file to the begining defaults to false,  mostly not needed.</li>
 <li>
-<em>threads</em>: sets the number of threads that will work on processing your queue defaults to 2.</li>
+<strong>threads</strong>: sets the number of threads that will work on processing your queue defaults to 2.</li>
 <li>
-<em>include_backtrace</em>: include the backtrace in the error log defaults to false.
+<strong>include_backtrace</strong>: include the backtrace in the error log, defaults to false.
 #### instance methods:</li>
-<li>run: fires off the threads to process the queue.  the program "waits" untill all processing has been completed.</li>
+<li>run: fires off the threads to process the queue.  the program "waits" until all processing has been completed.</li>
 </ul>
       </section>
     </div>
