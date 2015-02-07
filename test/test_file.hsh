@@ -1,0 +1,3 @@
+{"id"=>1, "firstname"=>"Test", "lastname"=>"Testerson","purchased"=>"A Fancy Watch", "email"=>"test@tesing.com"}
+{"id"=>2, "firstname"=>"Mickey", "lastname"=>"Mouse","purchased"=>"A Mickey Mouse Watch", "email"=>"mickey.mouse@disney.com"}
+{"id"=>3, "firstname"=>"Donald", "lastname"=>"Duck","purchased"=>"Singing Lessons", "email"=>"donald.duck@disney.com"}
