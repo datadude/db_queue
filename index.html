@@ -1,42 +1,37 @@
-<!doctype html>
-<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
-<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on http://github.com/jonrohan -->
+<!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen">
-  <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-  <script type="text/javascript" src="javascripts/script.js"></script>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Db queue : A Ruby library enabling the threaded processing from a database query or cached file. ">
 
-  <title>Db queue</title>
-  <meta name="description" content="A Ruby library enabling the threaded processing from a database query or cached file. ">
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Db queue</title>
+  </head>
 
-</head>
+  <body>
 
-<body>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/datadude/db_queue">View on GitHub</a>
 
-  <div class="wrapper">
-    <header>
-      <h1 class="title">Db queue</h1>
-    </header>
-    <div id="container">
-      <p class="tagline">A Ruby library enabling the threaded processing from a database query or cached file. </p>
-      <div id="main" role="main">
-        <div class="download-bar">
-        <div class="inner">
-          <a href="https://github.com/datadude/db_queue/tarball/master" class="download-button tar"><span>Download</span></a>
-          <a href="https://github.com/datadude/db_queue/zipball/master" class="download-button zip"><span>Download</span></a>
-          <a href="https://github.com/datadude/db_queue" class="code">View Db queue on GitHub</a>
-        </div>
-        <span class="blc"></span><span class="trc"></span>
-        </div>
-        <article class="markdown-body">
-          <h1>
+          <h1 id="project_title">Db queue</h1>
+          <h2 id="project_tagline">A Ruby library enabling the threaded processing from a database query or cached file. </h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/datadude/db_queue/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/datadude/db_queue/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
 <a id="db-queue" class="anchor" href="#db-queue" aria-hidden="true"><span class="octicon octicon-link"></span></a>DB Queue</h1>
 
 <p>An easy threaded work queue.</p>
@@ -131,38 +126,56 @@ to the line number stored in the <em>__place.txt_</em> cache file.  use this to 
 
 <p>result_set can be an ActiveRecord_Relation, or an array of hashes.</p>
 
-<h5>
-<a id="instance-methods" class="anchor" href="#instance-methods" aria-hidden="true"><span class="octicon octicon-link"></span></a>instance methods:</h5>
+<h4>
+<a id="instance-methods" class="anchor" href="#instance-methods" aria-hidden="true"><span class="octicon octicon-link"></span></a>instance methods:</h4>
 
 <ul>
-<li>lineno</li>
-<li>reset_place</li>
-<li>
-</li>
+<li>lineno: returns the value in place_cachefilename.txt </li>
+<li>lineno=: sets the place in the file. </li>
+<li>reset_place: sets lineno=0</li>
+<li>next_line: returns the <strong>current</strong> line and increments the pointer to the next line. </li>
 </ul>
 
 <h3>
 <a id="dbqueue" class="anchor" href="#dbqueue" aria-hidden="true"><span class="octicon octicon-link"></span></a>DbQueue</h3>
-        </article>
-      </div>
+
+<h4>
+<a id="dbqueuenewcache_filecallbackparams" class="anchor" href="#dbqueuenewcache_filecallbackparams" aria-hidden="true"><span class="octicon octicon-link"></span></a>DbQueue.new(cache_file,callback,params={})</h4>
+
+<p><em>cache_file</em> needs to be an instance of <code>SQLCacheFile</code>, <em>callback</em> needs to be a proc or lambda containing the code to be run for each row.  It is called with the row parameter, <em>row</em> should be a hash. </p>
+
+<h5>
+<a id="params" class="anchor" href="#params" aria-hidden="true"><span class="octicon octicon-link"></span></a>params</h5>
+
+<ul>
+<li>
+<em>log_file</em>: location and name for the logfile, defaults to <code>"#{Root_dir}/log/db_queue.log"</code>.</li>
+<li>
+<em>error_log_file</em>: location and name for the logfile, defaults to <code>"#{Root_dir}/log/db_queue_error.log'"</code>
+</li>
+<li>
+<em>id_column</em>: sets the "primary key" for your data set defaluts to 'id' mostly used for logging.</li>
+<li>
+<em>do_reset</em>: resets the pointer for the SQLCache file to the begining defaults to false,  mostly not needed.</li>
+<li>
+<em>threads</em>: sets the number of threads that will work on processing your queue defaults to 2.</li>
+<li>
+<em>include_backtrace</em>: include the backtrace in the error log defaults to false.
+#### instance methods:</li>
+<li>run: fires off the threads to process the queue.  the program "waits" untill all processing has been completed.</li>
+</ul>
+      </section>
     </div>
-    <footer>
-      <div class="owner">
-      <p><a href="https://github.com/datadude" class="avatar"><img src="https://avatars0.githubusercontent.com/u/75200?v=3&amp;s=60" width="48" height="48"></a> <a href="https://github.com/datadude">datadude</a> maintains <a href="https://github.com/datadude/db_queue">Db queue</a></p>
 
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Db queue maintained by <a href="https://github.com/datadude">datadude</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
 
-      </div>
-      <div class="creds">
-        <small>This page generated using <a href="http://pages.github.com/">GitHub Pages</a><br>theme by <a href="https://twitter.com/jonrohan/">Jon Rohan</a></small>
-      </div>
-    </footer>
-  </div>
-  <div class="current-section">
-    <a href="#top">Scroll to top</a>
-    <a href="https://github.com/datadude/db_queue/tarball/master" class="tar">tar</a><a href="https://github.com/datadude/db_queue/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
-    <p class="name"></p>
-  </div>
+    
 
-  
-</body>
+  </body>
 </html>
