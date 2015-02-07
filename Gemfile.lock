@@ -54,7 +54,6 @@ PLATFORMS
 DEPENDENCIES
   actionmailer
   activerecord (~> 4.1.0)
-  activesupport
   haml
   logger
   minitest
