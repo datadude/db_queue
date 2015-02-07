@@ -45,6 +45,13 @@ ActiveRecord::Base.establish_connection(
 
 
 consider doing the same in `envirionment_test.rb` if you wish to run tests
-Now write your processing code in a `.rb` file. you can
-##Configuration
-##Deploy
+
+Now write your processing code in a `.rb` file. You can find an example in `mail_users.rb`.
+The following steps are needed to start the queue:
+1. put the code you wish to run for each row of a query or file in a _lambda_ and assign it to a variable.
+2. Create or connect ot a `SqlCache` file.  That contains rows of the data you wish to process.
+3. Create a new DbQueue object passing in the `SQLCache` file, the lambda from step 1, and any configuration params
+4. Call .run for the DbQueue instance, this will kick off the processing. firing off the number of threads configured
+(2 by default). control will return once processing is complete.
+
+
