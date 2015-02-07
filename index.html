@@ -1,0 +1,168 @@
+<!doctype html>
+<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
+<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on http://github.com/jonrohan -->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen">
+  <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="javascripts/script.js"></script>
+
+  <title>Db queue</title>
+  <meta name="description" content="A Ruby library enabling the threaded processing from a database query or cached file. ">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <header>
+      <h1 class="title">Db queue</h1>
+    </header>
+    <div id="container">
+      <p class="tagline">A Ruby library enabling the threaded processing from a database query or cached file. </p>
+      <div id="main" role="main">
+        <div class="download-bar">
+        <div class="inner">
+          <a href="https://github.com/datadude/db_queue/tarball/master" class="download-button tar"><span>Download</span></a>
+          <a href="https://github.com/datadude/db_queue/zipball/master" class="download-button zip"><span>Download</span></a>
+          <a href="https://github.com/datadude/db_queue" class="code">View Db queue on GitHub</a>
+        </div>
+        <span class="blc"></span><span class="trc"></span>
+        </div>
+        <article class="markdown-body">
+          <h1>
+<a id="db-queue" class="anchor" href="#db-queue" aria-hidden="true"><span class="octicon octicon-link"></span></a>DB Queue</h1>
+
+<p>An easy threaded work queue.</p>
+
+<h2>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h2>
+
+<p>Suppose that you have a process that you want to perform for thousands of database records.
+Think sending emails, or performing complex calculations or transformations that take a large amount of time.
+You probably want to fire off a process and walk away from it.  I had just such a task, the process was going
+to take 15 seconds or more and  I had 18,000 records to process. Testing indicated that to complete the task I
+would need something like 36 hours!</p>
+
+<p>I did not want to keep a database connection open that long, and if something happened I would want to be able to
+pick up where I left off and complete the task. Enter the DB Queue!</p>
+
+<h3>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h3>
+
+<ul>
+<li>Easy queue creation using active record, a text file or a SQL query.</li>
+<li>Logging of each item processed, and a separate log for errors.</li>
+<li>Saves its place in the queue to file.</li>
+<li>Uses fairly human readable text files to cache.</li>
+<li>Tracks successes and failures</li>
+<li>Threaded processing.</li>
+</ul>
+
+<h2>
+<a id="dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dependencies</h2>
+
+<p>Depends on Standard RAILS components Active Record and Logger.
+Plus any Active record adapter that you might need.
+It has been tested with Mysql2 and FireBird adapters.</p>
+
+<h2>
+<a id="quickstart" class="anchor" href="#quickstart" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quickstart</h2>
+
+<p>Start by simply cloning this project:</p>
+
+<pre><code>     git clone https://github.com/datadude/db_queue
+</code></pre>
+
+<p>Then set up your database connection in the <code>envirionment.rb</code></p>
+
+<div class="highlight highlight-ruby"><pre><span class="pl-s3">ActiveRecord</span>::<span class="pl-s3">Base</span>.establish_connection(
+    <span class="pl-c1">:adapter</span>=&gt; <span class="pl-s1"><span class="pl-pds">"</span>mysql2<span class="pl-pds">"</span></span>,
+    <span class="pl-c1">:host</span> =&gt; <span class="pl-s1"><span class="pl-pds">"</span>localhost<span class="pl-pds">"</span></span>,
+    <span class="pl-c1">:database</span>=&gt; <span class="pl-s1"><span class="pl-pds">"</span>my_users<span class="pl-pds">"</span></span>,
+    <span class="pl-c1">:username</span> =&gt; <span class="pl-s1"><span class="pl-pds">'</span>test_user<span class="pl-pds">'</span></span>,
+    <span class="pl-c1">:password</span> =&gt; <span class="pl-s1"><span class="pl-pds">'</span>secretpassword<span class="pl-pds">'</span></span>
+)</pre></div>
+
+<p>consider doing the same in <code>envirionment_test.rb</code> if you wish to run tests.</p>
+
+<p>Now write your processing code in a <code>.rb</code> file. You can find an example in <code>mail_users.rb</code>.
+The following steps are needed to start the queue:
+1. put the code you wish to run for each row of a query or file in a <strong>lambda</strong> and assign it to a variable.
+2. Create or connect ot a <code>SqlCache</code> file.  That contains rows of the data you wish to process.
+3. Create a new DbQueue object passing in the <code>SQLCache</code> file, the lambda from step 1, and any configuration params
+4. Call .run for the DbQueue instance, this will kick off the processing. firing off the number of threads configured
+(2 by default). control will return once processing is complete.</p>
+
+<h2>
+<a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h2>
+
+<h3>
+<a id="sqlcache" class="anchor" href="#sqlcache" aria-hidden="true"><span class="octicon octicon-link"></span></a>SqlCache</h3>
+
+<h4>
+<a id="sqlcacheread_cache_filefilename" class="anchor" href="#sqlcacheread_cache_filefilename" aria-hidden="true"><span class="octicon octicon-link"></span></a>SqlCache.read_cache_file(filename)</h4>
+
+<p>class method to return a <code>SqlCacheFile</code> given a file that has already been produced.  Connects to that file and scrolls 
+to the line number stored in the <em>__place.txt_</em> cache file.  use this to re-open a cached file.</p>
+
+<h4>
+<a id="sqlcachecache_by_sqlfilenamesql" class="anchor" href="#sqlcachecache_by_sqlfilenamesql" aria-hidden="true"><span class="octicon octicon-link"></span></a>SqlCache.cache_by_sql(filename,sql)</h4>
+
+<p>class method to return a <code>SqlCacheFile</code> given arbitrary sql.  Uses ActiveRecord to connect to the database and run 
+<code>find_by_sql</code>. Use this to create a new cache file.</p>
+
+<h4>
+<a id="sqlcacheactiverecord_relation-cache_resultfilename" class="anchor" href="#sqlcacheactiverecord_relation-cache_resultfilename" aria-hidden="true"><span class="octicon octicon-link"></span></a>SqlCache::ActiveRecord_Relation cache_result(filename)</h4>
+
+<p>You can also call <code>cache_result(filename)</code> oonthe resultset returned from a 'find' or '.all' query </p>
+
+<h3>
+<a id="sqlcachefile" class="anchor" href="#sqlcachefile" aria-hidden="true"><span class="octicon octicon-link"></span></a>SqlCacheFile</h3>
+
+<h4>
+<a id="sqlcachefilenewfilenameresult_setnil" class="anchor" href="#sqlcachefilenewfilenameresult_setnil" aria-hidden="true"><span class="octicon octicon-link"></span></a>SqlCacheFile.new(filename,result_set=nil)</h4>
+
+<p>result_set can be an ActiveRecord_Relation, or an array of hashes.</p>
+
+<h5>
+<a id="instance-methods" class="anchor" href="#instance-methods" aria-hidden="true"><span class="octicon octicon-link"></span></a>instance methods:</h5>
+
+<ul>
+<li>lineno</li>
+<li>reset_place</li>
+<li>
+</li>
+</ul>
+
+<h3>
+<a id="dbqueue" class="anchor" href="#dbqueue" aria-hidden="true"><span class="octicon octicon-link"></span></a>DbQueue</h3>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="owner">
+      <p><a href="https://github.com/datadude" class="avatar"><img src="https://avatars0.githubusercontent.com/u/75200?v=3&amp;s=60" width="48" height="48"></a> <a href="https://github.com/datadude">datadude</a> maintains <a href="https://github.com/datadude/db_queue">Db queue</a></p>
+
+
+      </div>
+      <div class="creds">
+        <small>This page generated using <a href="http://pages.github.com/">GitHub Pages</a><br>theme by <a href="https://twitter.com/jonrohan/">Jon Rohan</a></small>
+      </div>
+    </footer>
+  </div>
+  <div class="current-section">
+    <a href="#top">Scroll to top</a>
+    <a href="https://github.com/datadude/db_queue/tarball/master" class="tar">tar</a><a href="https://github.com/datadude/db_queue/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
+    <p class="name"></p>
+  </div>
+
+  
+</body>
+</html>
