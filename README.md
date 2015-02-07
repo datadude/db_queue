@@ -55,4 +55,5 @@ The following steps are needed to start the queue:
 4. Call .run for the DbQueue instance, this will kick off the processing. firing off the number of threads configured
 (2 by default). control will return once processing is complete.
 
-
+##[Documentation](http://datadude.github.io/db_queue)
+[http://datadude.github.io/db_queue]
